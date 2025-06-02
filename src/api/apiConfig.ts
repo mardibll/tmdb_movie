@@ -15,6 +15,18 @@ const favorites_movies = (
   account_id: string | null,
   session_id: string | null
 ) => `account/${account_id}/favorite/movies?session_id=${session_id}`;
+
+const watchlist_movies = (
+  account_id: string | null,
+  session_id: string | null
+) => `account/${account_id}/watchlist/movies?session_id=${session_id}`;
+const remove_from_watchlist = (
+  account_id: string | null,
+  session_id: string | null,
+  api_key: string | null
+) =>
+  `account/${account_id}/watchlist?session_id=${session_id}&api_key=${api_key}`;
+
 const account_detail = (session_id: string | null) =>
   `account?session_id=${session_id}`;
 
@@ -32,4 +44,6 @@ export {
   favorites_movies,
   movie_search,
   account_detail,
+  watchlist_movies,
+  remove_from_watchlist,
 };

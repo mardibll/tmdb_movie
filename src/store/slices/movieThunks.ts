@@ -3,7 +3,9 @@ import {
   getMovieDetails,
   getMovieList,
   getMovieSearch,
+  getWatchlistMovies,
   removeFromFavorites,
+  removeFromWatchlist,
 } from "../../api/apiTmdb";
 import { AppDispatch } from "../store";
 import {
@@ -13,6 +15,7 @@ import {
   setMovies,
   setPopular,
   setTopRating,
+  setWatchlist,
 } from "./moviesSlice";
 
 export const fetchMoviesList =
@@ -84,6 +87,29 @@ export const addOrDeleteFavorite =
     dispatch(setLoading(true));
     try {
       return await removeFromFavorites(movieId, isFavorite);
+    } catch (error) {
+      console.error("fetchSearchMovies error:", error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+export const fetchWatchlistMovies = () => async (dispatch: AppDispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const res = await getWatchlistMovies();
+    dispatch(setWatchlist(res));
+  } catch (error) {
+    console.error("fetchSearchMovies error:", error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+export const addOrDeleteWatchlist =
+  (movieId: number, isWatchlist: boolean) => async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
+    try {
+      return await removeFromWatchlist(movieId, isWatchlist);
     } catch (error) {
       console.error("fetchSearchMovies error:", error);
     } finally {

@@ -6,17 +6,18 @@ import { useAppDispatch, useAppSelector } from "../hooks/hooksStore";
 import { RootState } from "../store/store";
 import {
   addOrDeleteFavorite,
+  addOrDeleteWatchlist,
   fetchDetailMovies,
   fetchFavoriteMovies,
   fetchMoviesList,
+  fetchWatchlistMovies,
 } from "../store/slices/movieThunks";
 
 const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { moviesDetail, popular, favorites, movies, loading } = useAppSelector(
-    (state: RootState) => state.movieStore
-  );
+  const { moviesDetail, popular, favorites, watchlist, movies, loading } =
+    useAppSelector((state: RootState) => state.movieStore);
 
   useEffect(() => {
     if (id !== undefined) {
@@ -38,7 +39,9 @@ const MovieDetails: React.FC = () => {
   };
 
   const handleWatchlist = async () => {
-    // if (movie) await addToWatchlist(movie.id, true);
+    if (moviesDetail)
+      await dispatch(addOrDeleteWatchlist(moviesDetail.id, true));
+    dispatch(fetchWatchlistMovies());
   };
 
   useEffect(() => {
@@ -48,6 +51,7 @@ const MovieDetails: React.FC = () => {
   if (loading || !moviesDetail) return <Loader />;
 
   const isFavorite = favorites.some((x) => x.id === moviesDetail.id);
+  const isWatchlist = watchlist.some((x) => x.id === moviesDetail.id);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -77,18 +81,21 @@ const MovieDetails: React.FC = () => {
             <button
               disabled={isFavorite}
               onClick={handleFavorite}
-              className={`px-4 py-2 rounded 
-    ${
-      isFavorite
-        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-        : "bg-red-600 text-white hover:bg-red-700"
-    }`}
+              className={`px-4 py-2 rounded ${
+                isFavorite
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-red-600 text-white hover:bg-red-700"
+              }`}
             >
               Add to Favorites
             </button>
             <button
               onClick={handleWatchlist}
-              className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+              className={`px-4 py-2 rounded ${
+                isWatchlist
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-yellow-500 text-white hover:bg-yellow-600"
+              }`}
             >
               Add to Watchlist
             </button>

@@ -10,6 +10,7 @@ export interface MoviesState {
   popular: Movie[];
   topRating: Movie[];
   favorites: Movie[];
+  watchlist: Movie[];
   moviesDetail: MovieDetailData | null;
   searchQuery: string;
   filter: FILTER;
@@ -21,6 +22,7 @@ const initialState: MoviesState = {
   popular: [],
   topRating: [],
   favorites: [],
+  watchlist: [],
   moviesDetail: null,
   searchQuery: "",
   filter: {
@@ -59,6 +61,9 @@ const moviesSlice = createSlice({
     setFavorite(state, action: PayloadAction<Movie[]>) {
       state.favorites = [...state.favorites, ...action.payload];
     },
+    setWatchlist(state, action: PayloadAction<Movie[]>) {
+      state.watchlist = [...state.watchlist, ...action.payload];
+    },
   },
 });
 
@@ -71,6 +76,7 @@ export const {
   setSearched,
   clearMovies,
   setFavorite,
+  setWatchlist,
 } = moviesSlice.actions;
 
 export default moviesSlice.reducer;

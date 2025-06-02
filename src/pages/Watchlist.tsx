@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-interface Movie {
-  id: number;
-  title: string;
-  poster_path: string;
-  release_date: string;
-}
+import { useAppDispatch, useAppSelector } from "../hooks/hooksStore";
+import { RootState } from "../store/store";
+import {
+  addOrDeleteWatchlist,
+  fetchWatchlistMovies,
+} from "../store/slices/movieThunks";
+import Loader from "../components/Loader";
 
 const Watchlist: React.FC = () => {
-  const [watchlist, setWatchlist] = useState<Movie[]>([]);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { watchlist, loading } = useAppSelector(
+    (state: RootState) => state.movieStore
+  );
 
   useEffect(() => {
-    const stored = localStorage.getItem("watchlist");
-    if (stored) {
-      setWatchlist(JSON.parse(stored));
-    }
+    dispatch(fetchWatchlistMovies());
   }, []);
 
-  const removeFromWatchlist = (id: number) => {
-    const filtered = watchlist.filter((movie) => movie.id !== id);
-    setWatchlist(filtered);
-    localStorage.setItem("watchlist", JSON.stringify(filtered));
+  const handleRemove = async (movieId: number) => {
+    const resultSuccess = await dispatch(addOrDeleteWatchlist(movieId, false));
+    if (resultSuccess) dispatch(fetchWatchlistMovies());
   };
+
+  if (loading) return <Loader />;
 
   if (watchlist.length === 0)
     return (
@@ -48,7 +49,7 @@ const Watchlist: React.FC = () => {
               onClick={() => navigate(`/movie/${movie.id}`)}
             />
             <button
-              onClick={() => removeFromWatchlist(movie.id)}
+              onClick={() => handleRemove(movie.id)}
               className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1"
               aria-label={`Remove ${movie.title} from watchlist`}
               title="Remove from watchlist"

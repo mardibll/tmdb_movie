@@ -7,8 +7,10 @@ import {
   movie_list,
   movie_search,
   remove_from_favorites,
+  remove_from_watchlist,
   request_token,
   validate_with_login,
+  watchlist_movies,
 } from "./apiConfig";
 import Api from "./api";
 
@@ -115,6 +117,40 @@ export const removeFromFavorites = async (
         media_type: "movie",
         media_id,
         favorite,
+      }
+    );
+
+    return res.status;
+  } catch (error) {
+    console.log("removeFromFavorites error : ", error);
+  }
+};
+
+export const getWatchlistMovies = async () => {
+  const session_id = localStorage.getItem("session_id");
+  const account_id = localStorage.getItem("account_id");
+  try {
+    const res = await Api.get(watchlist_movies(account_id, session_id));
+
+    return res.data.results;
+  } catch (error) {
+    console.log("getFavoriteMovies error : ", error);
+  }
+};
+
+export const removeFromWatchlist = async (
+  media_id: number,
+  watchlist: boolean
+) => {
+  const session_id = localStorage.getItem("session_id");
+  const account_id = localStorage.getItem("account_id");
+  try {
+    const res = await Api.post(
+      remove_from_watchlist(account_id, session_id, API_KEY),
+      {
+        media_type: "movie",
+        media_id,
+        watchlist,
       }
     );
 
