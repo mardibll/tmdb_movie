@@ -34,37 +34,31 @@ const Watchlist: React.FC = () => {
     );
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold mb-6">My Watchlist</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-        {watchlist.map((movie) => (
+      <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-6">Your Watchlist</h1>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {watchlist?.map((movie, index) => (
           <div
-            key={movie.id}
-            className="relative cursor-pointer rounded overflow-hidden shadow hover:shadow-lg transition bg-white"
+            key={index}
+            className="bg-white shadow rounded overflow-hidden relative group hover:shadow-lg transition"
           >
             <img
               src={process.env.REACT_APP_URL_IMAGE + movie.poster_path}
               alt={movie.title}
-              className="w-full h-56 object-cover"
+              className="w-full h-64 object-cover cursor-pointer"
               onClick={() => navigate(`/movie/${movie.id}`)}
             />
-            <button
-              onClick={() => handleRemove(movie.id)}
-              className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1"
-              aria-label={`Remove ${movie.title} from watchlist`}
-              title="Remove from watchlist"
-            >
-              &times;
-            </button>
             <div className="p-2">
-              <h3
-                className="text-sm font-semibold truncate"
-                onClick={() => navigate(`/movie/${movie.id}`)}
-              >
-                {movie.title}
-              </h3>
+              <h2 className="text-sm font-semibold truncate">{movie.title}</h2>
               <p className="text-xs text-gray-500">{movie.release_date}</p>
             </div>
+            <button
+              onClick={() => handleRemove(movie.id)}
+              className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+            >
+              Remove
+            </button>
           </div>
         ))}
       </div>

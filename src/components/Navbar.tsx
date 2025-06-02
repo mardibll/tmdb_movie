@@ -15,15 +15,12 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0">
-            <Link to="/" className="text-xl font-bold">
-              🎬 Movies
+            <Link to="/" className="text-2xl font-bold tracking-[8px]">
+              CINEMA
             </Link>
           </div>
 
           <div className="hidden md:flex space-x-6 items-center">
-            <Link to="/" className="hover:text-gray-200">
-              Home
-            </Link>
             <Link to="/watchlist" className="hover:text-gray-200">
               Watchlist
             </Link>

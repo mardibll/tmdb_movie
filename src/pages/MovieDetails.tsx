@@ -16,7 +16,7 @@ import {
 const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { moviesDetail, popular, favorites, watchlist, movies, loading } =
+  const { moviesDetail, popular, favorites, watchlist, loading } =
     useAppSelector((state: RootState) => state.movieStore);
 
   useEffect(() => {
@@ -104,8 +104,13 @@ const MovieDetails: React.FC = () => {
       </div>
 
       <div className="mt-10">
-        <h2 className="text-xl font-semibold mb-4">🔥 Popular Movies</h2>
-        <div className="overflow-x-auto">
+        <h2 className="font-bold text-xl">
+          Recommendations
+        </h2>
+        <div
+          className="overflow-x-auto py-2"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           <div className="flex gap-4">
             {popular.map((movie, index) => (
               <MovieCard key={index} movie={movie} horizontal />
@@ -114,7 +119,7 @@ const MovieDetails: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-10">
+      {/* <div className="mt-10">
         <h2 className="text-xl font-semibold mb-4">🆕 New Movies</h2>
         <div className="overflow-x-auto">
           <div className="flex gap-4">
@@ -123,7 +128,7 @@ const MovieDetails: React.FC = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

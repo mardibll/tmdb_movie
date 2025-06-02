@@ -36,7 +36,7 @@ const Favorites: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Favorite Movies</h1>
+      <h1 className="text-2xl font-bold mb-6">Your Favorite Movies</h1>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {favorites?.map((movie, index) => (
