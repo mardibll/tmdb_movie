@@ -4,6 +4,7 @@ import {
   favorites_movies,
   movie_details,
   movie_list,
+  movie_rated,
   movie_search,
   remove_from_favorites,
   request_token,
@@ -71,7 +72,7 @@ export const removeFromFavorites = async (movieId: number) => {
   }
 };
 
-export const getMovieDetails = async (id: number) => {
+export const getMovieDetails = async (id: number | string) => {
   try {
     const res = await Api.get(movie_details(id));
 
@@ -84,6 +85,15 @@ export const getMovieDetails = async (id: number) => {
 export const getMovieList = async (type: string) => {
   try {
     const res = await Api.get(movie_list(type), {});
+
+    return res.data.results;
+  } catch (error) {
+    console.log("getMovieList error : ", error);
+  }
+};
+export const getMovieRated = async (type: string) => {
+  try {
+    const res = await Api.get(movie_rated(type), {});
 
     return res.data.results;
   } catch (error) {

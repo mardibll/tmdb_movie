@@ -14,17 +14,19 @@ const favorites_movies = (
   session_id: string | null
 ) => `account/${account_id}/favorite/movies?session_id=${session_id}`;
 
-const movie_details = (id: number) => `movie/${id}`;
+const movie_details = (id: number | string) => `movie/${id}`;
 const movie_list = (type: string) => `movie/${type}?language=en-US&page=1`;
+const movie_rated = (type: string) => `movie/${type}?language=en-US&page=1`;
 const movie_search = (query: string) => `search/movie?query=${query}`;
 
 export {
   request_token,
   validate_with_login,
   create_session,
+  movie_rated,
   remove_from_favorites,
   movie_details,
   movie_list,
   favorites_movies,
-  movie_search
+  movie_search,
 };
