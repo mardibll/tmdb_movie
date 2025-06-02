@@ -37,16 +37,16 @@ const moviesSlice = createSlice({
   initialState,
   reducers: {
     setMovies(state, action: PayloadAction<Movie[]>) {
-      state.movies = [...state.movies, ...action.payload];
+      state.movies = action.payload;
     },
     setMovieDetail(state, action: PayloadAction<MovieDetailData>) {
       state.moviesDetail = action.payload;
     },
     setPopular(state, action: PayloadAction<Movie[]>) {
-      state.popular = [...state.popular, ...action.payload];
+      state.popular = action.payload;
     },
     setTopRating(state, action: PayloadAction<Movie[]>) {
-      state.topRating = [...state.topRating, ...action.payload];
+      state.topRating = action.payload;
     },
     setSearched(state, action: PayloadAction<string>) {
       state.searchQuery = action.payload;
@@ -59,10 +59,10 @@ const moviesSlice = createSlice({
     },
 
     setFavorite(state, action: PayloadAction<Movie[]>) {
-      state.favorites = [...state.favorites, ...action.payload];
+      state.favorites = action.payload;
     },
     setWatchlist(state, action: PayloadAction<Movie[]>) {
-      state.watchlist = [...state.watchlist, ...action.payload];
+      state.watchlist = action.payload;
     },
   },
 });
