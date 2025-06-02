@@ -40,9 +40,9 @@ export default function Home() {
           }`}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {movies.map((movie) => (
+          {movies.map((movie, index) => (
             <MovieCard
-              key={movie.id}
+              key={index}
               movie={movie}
               horizontal={actionSearch ? false : true}
             />
@@ -53,8 +53,8 @@ export default function Home() {
         <div>
           <h1 className="text-3xl font-bold my-4">Top Rated</h1>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {topRating.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} horizontal={false} />
+            {topRating.map((movie, index) => (
+              <MovieCard key={index} movie={movie} horizontal={false} />
             ))}
           </div>
         </div>

@@ -12,8 +12,8 @@ export const store = configureStore({
   reducer: {
     movieStore: moviesReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(...middlewares),
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware().concat(...middlewares),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

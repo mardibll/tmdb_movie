@@ -1,16 +1,18 @@
 import axios from "axios";
 import {
+  account_detail,
   create_session,
   favorites_movies,
   movie_details,
   movie_list,
-  movie_rated,
   movie_search,
   remove_from_favorites,
   request_token,
   validate_with_login,
 } from "./apiConfig";
 import Api from "./api";
+
+const API_KEY = process.env.REACT_APP_API_KEY || "";
 
 export const getRequestToken = async () => {
   const res = await axios.get(request_token);
@@ -41,7 +43,51 @@ export const createSession = async (requestToken: string) => {
   const res = await axios.post(create_session, {
     request_token: requestToken,
   });
+  getAccountDetails(res.data.session_id);
   return res.data.session_id;
+};
+
+export const getAccountDetails = async (session_id: string) => {
+  if (!session_id) return;
+
+  try {
+    const res = await Api.get(account_detail(session_id));
+    const account_id = res.data.id;
+    localStorage.setItem("account_id", account_id);
+
+    return res.data;
+  } catch (error) {
+    console.log("getAccountDetails error:", error);
+  }
+};
+
+export const getMovieDetails = async (id: number | string) => {
+  try {
+    const res = await Api.get(movie_details(id));
+
+    return res.data;
+  } catch (error) {
+    console.log("getMovieDetails error : ", error);
+  }
+};
+export const getMovieSearch = async (query: string) => {
+  try {
+    const res = await Api.get(movie_search(query));
+
+    return res.data.results;
+  } catch (error) {
+    console.log("getMovieList error : ", error);
+  }
+};
+
+export const getMovieList = async (type: string) => {
+  try {
+    const res = await Api.get(movie_list(type), {});
+
+    return res.data.results;
+  } catch (error) {
+    console.log("getMovieList error : ", error);
+  }
 };
 
 export const getFavoriteMovies = async () => {
@@ -56,57 +102,24 @@ export const getFavoriteMovies = async () => {
   }
 };
 
-export const removeFromFavorites = async (movieId: number) => {
+export const removeFromFavorites = async (
+  media_id: number,
+  favorite: boolean
+) => {
   const session_id = localStorage.getItem("session_id");
   const account_id = localStorage.getItem("account_id");
   try {
-    const res = await Api.post(remove_from_favorites(account_id, session_id), {
-      media_type: "movie",
-      media_id: movieId,
-      favorite: false,
-    });
+    const res = await Api.post(
+      remove_from_favorites(account_id, session_id, API_KEY),
+      {
+        media_type: "movie",
+        media_id,
+        favorite,
+      }
+    );
 
-    return res;
+    return res.status;
   } catch (error) {
     console.log("removeFromFavorites error : ", error);
-  }
-};
-
-export const getMovieDetails = async (id: number | string) => {
-  try {
-    const res = await Api.get(movie_details(id));
-
-    return res.data;
-  } catch (error) {
-    console.log("getMovieDetails error : ", error);
-  }
-};
-
-export const getMovieList = async (type: string) => {
-  try {
-    const res = await Api.get(movie_list(type), {});
-
-    return res.data.results;
-  } catch (error) {
-    console.log("getMovieList error : ", error);
-  }
-};
-export const getMovieRated = async (type: string) => {
-  try {
-    const res = await Api.get(movie_rated(type), {});
-
-    return res.data.results;
-  } catch (error) {
-    console.log("getMovieList error : ", error);
-  }
-};
-
-export const getMovieSearch = async (query: string) => {
-  try {
-    const res = await Api.get(movie_search(query));
-
-    return res.data.results;
-  } catch (error) {
-    console.log("getMovieList error : ", error);
   }
 };

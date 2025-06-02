@@ -1,10 +1,13 @@
 import {
+  getFavoriteMovies,
   getMovieDetails,
   getMovieList,
   getMovieSearch,
+  removeFromFavorites,
 } from "../../api/apiTmdb";
 import { AppDispatch } from "../store";
 import {
+  setFavorite,
   setLoading,
   setMovieDetail,
   setMovies,
@@ -58,6 +61,29 @@ export const fetchSearchMovies =
       const res = await getMovieSearch(query);
 
       dispatch(setMovies(res));
+    } catch (error) {
+      console.error("fetchSearchMovies error:", error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+export const fetchFavoriteMovies = () => async (dispatch: AppDispatch) => {
+  dispatch(setLoading(true));
+  try {
+    const res = await getFavoriteMovies();
+    dispatch(setFavorite(res));
+  } catch (error) {
+    console.error("fetchSearchMovies error:", error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+export const addOrDeleteFavorite =
+  (movieId: number, isFavorite: boolean) => async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
+    try {
+      return await removeFromFavorites(movieId, isFavorite);
     } catch (error) {
       console.error("fetchSearchMovies error:", error);
     } finally {

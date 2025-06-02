@@ -39,7 +39,7 @@ const Api = {
   post(endPoint: string, param: ParamsType): Promise<AxiosResponse> {
     const params = {
       ...param,
-      api_key: API_KEY,
+      // api_key: API_KEY,
       session_id: localStorage.getItem("session_id"),
     };
     return instance.post(endPoint, params);

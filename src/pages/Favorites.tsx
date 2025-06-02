@@ -1,39 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
-import { getFavoriteMovies, removeFromFavorites } from "../api/apiTmdb";
-
-interface Movie {
-  id: number;
-  title: string;
-  poster_path: string;
-  release_date: string;
-}
+import { useAppDispatch, useAppSelector } from "../hooks/hooksStore";
+import { RootState } from "../store/store";
+import {
+  addOrDeleteFavorite,
+  fetchFavoriteMovies,
+} from "../store/slices/movieThunks";
 
 const Favorites: React.FC = () => {
-  const [favorites, setFavorites] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-
-  const fetchFavorites = async () => {
-    setLoading(true);
-    try {
-      const data = await getFavoriteMovies();
-
-      setFavorites(data);
-    } catch (err) {
-      console.error("Failed to fetch favorites:", err);
-    }
-    setLoading(false);
-  };
+  const dispatch = useAppDispatch();
+  const { favorites, loading } = useAppSelector(
+    (state: RootState) => state.movieStore
+  );
 
   const handleRemove = async (movieId: number) => {
-    await removeFromFavorites(movieId);
-    setFavorites((prev) => prev.filter((movie) => movie.id !== movieId));
+    const resultSuccess = await dispatch(addOrDeleteFavorite(movieId, false));
+    if (resultSuccess) dispatch(fetchFavoriteMovies());
   };
 
   useEffect(() => {
-    fetchFavorites();
+    dispatch(fetchFavoriteMovies());
   }, []);
 
   if (loading) return <Loader />;
@@ -48,9 +36,9 @@ const Favorites: React.FC = () => {
         </p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {favorites?.map((movie) => (
+          {favorites?.map((movie, index) => (
             <div
-              key={movie.id}
+              key={index}
               className="bg-white shadow rounded overflow-hidden relative group hover:shadow-lg transition"
             >
               <img

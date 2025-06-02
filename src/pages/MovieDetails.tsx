@@ -5,14 +5,16 @@ import MovieCard from "../components/MovieCard";
 import { useAppDispatch, useAppSelector } from "../hooks/hooksStore";
 import { RootState } from "../store/store";
 import {
+  addOrDeleteFavorite,
   fetchDetailMovies,
+  fetchFavoriteMovies,
   fetchMoviesList,
 } from "../store/slices/movieThunks";
 
 const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { moviesDetail, popular, movies, loading } = useAppSelector(
+  const { moviesDetail, popular, favorites, movies, loading } = useAppSelector(
     (state: RootState) => state.movieStore
   );
 
@@ -30,7 +32,9 @@ const MovieDetails: React.FC = () => {
   };
 
   const handleFavorite = async () => {
-    // if (movie) await addToFavorites(movie.id, true);
+    if (moviesDetail)
+      await dispatch(addOrDeleteFavorite(moviesDetail.id, true));
+    dispatch(fetchFavoriteMovies());
   };
 
   const handleWatchlist = async () => {
@@ -42,6 +46,8 @@ const MovieDetails: React.FC = () => {
   }, []);
 
   if (loading || !moviesDetail) return <Loader />;
+
+  const isFavorite = favorites.some((x) => x.id === moviesDetail.id);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -58,9 +64,9 @@ const MovieDetails: React.FC = () => {
           </p>
           <p className="text-gray-700 mb-4">{moviesDetail.overview}</p>
           <div className="flex flex-wrap gap-2 mb-4">
-            {moviesDetail.genres.map((g) => (
+            {moviesDetail.genres.map((g, index) => (
               <span
-                key={g.id}
+                key={index}
                 className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded"
               >
                 {g.name}
@@ -69,8 +75,14 @@ const MovieDetails: React.FC = () => {
           </div>
           <div className="flex gap-4">
             <button
+              disabled={isFavorite}
               onClick={handleFavorite}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              className={`px-4 py-2 rounded 
+    ${
+      isFavorite
+        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+        : "bg-red-600 text-white hover:bg-red-700"
+    }`}
             >
               Add to Favorites
             </button>
@@ -88,8 +100,8 @@ const MovieDetails: React.FC = () => {
         <h2 className="text-xl font-semibold mb-4">🔥 Popular Movies</h2>
         <div className="overflow-x-auto">
           <div className="flex gap-4">
-            {popular.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} horizontal />
+            {popular.map((movie, index) => (
+              <MovieCard key={index} movie={movie} horizontal />
             ))}
           </div>
         </div>
@@ -99,8 +111,8 @@ const MovieDetails: React.FC = () => {
         <h2 className="text-xl font-semibold mb-4">🆕 New Movies</h2>
         <div className="overflow-x-auto">
           <div className="flex gap-4">
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} horizontal />
+            {movies.map((movie, index) => (
+              <MovieCard key={index} movie={movie} horizontal />
             ))}
           </div>
         </div>
